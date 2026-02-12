@@ -85,4 +85,5 @@ stateDiagram-v2
     
     MostrandoResultado --> Finalizado
     Finalizado --> [*]
+Fin --> [*]
 ```
