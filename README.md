@@ -1,4 +1,4 @@
-## UML_Draw_io
+## Diagrama de clases
 ```mermaid
 classDiagram
     class ICalculadoraVista {
