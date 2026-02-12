@@ -110,6 +110,7 @@ stateDiagram-v2
 ## Diagrama de secuencia del programa
 ```mermaid
 sequenceDiagram
+    participant as Usuario
     participant M as Main
     participant C as CalculadoraControlador
     participant V as CalculadoraVista
