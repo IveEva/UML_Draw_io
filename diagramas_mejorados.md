@@ -106,3 +106,36 @@ stateDiagram-v2
     EsperandoDecision --> Finalizado: Usuario elige "Salir"
     Finalizado --> [*]
 ```
+
+## Diagrama de secuencia del programa
+```mermaid
+sequenceDiagram
+    participant M as Main
+    participant C as CalculadoraControlador
+    participant V as CalculadoraVista
+    participant L as CalculadoraLogica
+
+    M->>C: iniciar()
+    
+    loop Mientras usuario quiera continuar
+        C->>V: solicitarDatos()
+        V-->>U: (Pide num1, op, num2)
+        Note over V: Valida tipos de datos
+        V-->>C: retorna objeto DatosEntrada
+        
+        C->>L: calcular(datos)
+        alt Operación Exitosa
+            L-->>C: retorna resultado (double)
+            C->>V: mostrarResultado(resultado)
+        else Error (División por cero)
+            L-->>C: lanza ArithmeticException
+            C->>V: mostrarError(mensaje)
+        end
+        
+        C->>V: preguntarDeseaContinuar()
+        V-->>C: retorna boolean
+    end
+    
+    C->>V: mostrarDespedida()
+    C-->>M: Fin del programa
+```
