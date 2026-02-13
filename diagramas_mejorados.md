@@ -146,6 +146,8 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
+    
+    %% Definición única de participantes
     actor Usuario
     participant Main
     participant Vista as CalculadoraVista
@@ -159,6 +161,7 @@ sequenceDiagram
         Main->>Vista: solicitarDatos()
         Usuario->>Vista: Ingresa n1, op, n2
         
+        %% Uso de create para el objeto DTO
         create participant DTO
         Vista->>DTO: new DatosEntrada(n1, n2, op)
         DTO-->>Vista: objeto datos
