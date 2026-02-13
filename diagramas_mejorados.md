@@ -145,45 +145,78 @@ sequenceDiagram
 ## Diagrama de secuencia del programa, con usuario
 ```mermaid
 sequenceDiagram
-    autonumber
-    
-    %% Declaración única de actores y participantes
-    actor U as Usuario
-    participant M as Main
-    participant V as CalculadoraVista
-    participant L as CalculadoraLogica
-    participant D as DatosEntrada
+autonumber
 
-    M->>V: mostrarBienvenida()
-    V-->>U: Muestra icono y título
+actor Usuario
+participant Main
+participant Controlador as ControladorCalculadora
+participant Entrada as EntradaConsola
+participant Gestor as GestorOperaciones
+participant Calc as Calculadora
+participant Salida as SalidaConsola
 
-    loop Mientras continuar sea true
-        M->>V: solicitarDatos()
-        U->>V: Ingresa n1, op, n2
-        
-        create participant D
-        V->>D: new DatosEntrada(n1, n2, op)
-        D-->>V: objeto datos
-        V-->>M: devuelve objeto datos
+Main->>Controlador: ejecutar()
 
-        rect rgb(240, 240, 240)
-            Note over M, L: Proceso de Cálculo
-            M->>L: calcular(n1, n2, op)
-            alt Operación exitosa
-                L-->>M: devuelve resultado
-                M->>V: mostrarResultado(res)
-                V-->>U: Imprime resultado
-            else Error (Exception)
-                L-->>M: lanza Error
-                M->>V: mostrarError(msj)
-                V-->>U: Imprime mensaje de error
-            end
-        end
+Controlador->>Entrada: leerNumero("Introduce el primer número")
+Entrada-->>Controlador: a
 
-        M->>V: preguntarContinuar()
-        U->>V: Respuesta (s/n)
-        V-->>M: boolean (continuar)
-    end
-    
-    M->>U: "Fin de la sesión"
+Controlador->>Entrada: leerNumero("Introduce el segundo número")
+Entrada-->>Controlador: b
+
+Controlador->>Entrada: leerOperacion("Elige operación (+,-,*,/)")
+Entrada-->>Controlador: op
+
+Controlador->>Gestor: resolver(op, a, b)
+Gestor->>Calc: ejecutarOperación(op, a, b)
+
+alt op == "+"
+  Calc-->>Gestor: sumar(a,b)
+else op == "-"
+  Calc-->>Gestor: restar(a,b)
+else op == "*"
+  Calc-->>Gestor: multiplicar(a,b)
+else op == "/"
+  alt b == 0
+    Calc--x Gestor: DivisionPorCeroException
+    Gestor--x Controlador: DivisionPorCeroException
+    Controlador->>Salida: mostrarError("No se puede dividir entre cero")
+  else b != 0
+    Calc-->>Gestor: dividir(a,b)
+  end
+else operación no válida
+  Gestor-->>Controlador: error operación inválida
+  Controlador->>Salida: mostrarError("Operación no válida")
+end
+
+opt resultado calculado correctamente
+  Gestor-->>Controlador: resultado
+  Controlador->>Salida: mostrarResultado(resultado)
+end
+```
+## Diagrama de estados
+```mermaid
+stateDiagram-v2
+[*] --> Inicio
+
+Inicio --> PidiendoNumero1
+PidiendoNumero1 --> PidiendoNumero2 : número1 válido
+PidiendoNumero1 --> ErrorEntrada : número1 inválido
+
+PidiendoNumero2 --> PidiendoOperacion : número2 válido
+PidiendoNumero2 --> ErrorEntrada : número2 inválido
+
+PidiendoOperacion --> ValidandoOperacion
+ValidandoOperacion --> Calculando : operación válida
+ValidandoOperacion --> ErrorOperacion : operación no válida
+
+Calculando --> MostrandoResultado : cálculo OK
+Calculando --> ErrorDivisionCero : división entre cero
+
+MostrandoResultado --> Fin
+ErrorEntrada --> Fin
+ErrorOperacion --> Fin
+ErrorDivisionCero --> Fin
+
+Fin --> [*]
+
 ```
