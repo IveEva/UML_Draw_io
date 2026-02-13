@@ -145,12 +145,17 @@ sequenceDiagram
 ## Diagrama de secuencia del programa, con usuario
 ```mermaid
 sequenceDiagram
+    actor Usuario as Cliente
+    participant Sistema
     autonumber
     actor Usuario
     participant Main
     participant Vista as CalculadoraVista
     participant Logica as CalculadoraLogica
     participant DTO as DatosEntrada
+
+    Usuario->>Sistema: Ingresa datos
+    Sistema-->>Usuario: Muestra resultado
 
     Main->>Vista: mostrarBienvenida()
     Vista-->>Usuario: Muestra icono y título
