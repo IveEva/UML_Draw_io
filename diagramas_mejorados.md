@@ -140,3 +140,47 @@ sequenceDiagram
     C->>V: mostrarDespedida()
     C-->>M: Fin del programa
 ```
+
+
+## Diagrama de secuencia del programa, con usuario
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Usuario
+    participant Main
+    participant Vista as CalculadoraVista
+    participant Logica as CalculadoraLogica
+    participant DTO as DatosEntrada
+
+    Main->>Vista: mostrarBienvenida()
+    Vista-->>Usuario: Muestra icono y título
+
+    loop Mientras continuar sea true
+        Main->>Vista: solicitarDatos()
+        Usuario->>Vista: Ingresa n1, op, n2
+        create participant DTO
+        Vista->>DTO: new DatosEntrada(n1, n2, op)
+        DTO-->>Vista: objeto datos
+        Vista-->>Main: devuelve objeto datos
+
+        rect rgb(240, 240, 240)
+            Note over Main, Logica: Proceso de Cálculo
+            Main->>Logica: calcular(datos.n1, datos.n2, datos.op)
+            alt Operación exitosa
+                Logica-->>Main: devuelve resultado (double)
+                Main->>Vista: mostrarResultado(res)
+                Vista-->>Usuario: Muestra "Resultado: X"
+            else Error (División por cero / Op. inválida)
+                Logica-->>Main: lanza Exception
+                Main->>Vista: mostrarError(msj)
+                Vista-->>Usuario: Muestra "[!] Error: msj"
+            end
+        end
+
+        Main->>Vista: preguntarContinuar()
+        Usuario->>Vista: Ingresa 's' o 'n'
+        Vista-->>Main: boolean (continuar)
+    end
+    
+    Main->>Usuario: Imprime "Fin de la sesión"
+```
