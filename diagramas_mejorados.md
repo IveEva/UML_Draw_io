@@ -147,44 +147,43 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     
-    %% Definición única de participantes
-    actor Usuario
-    participant Main
-    participant Vista as CalculadoraVista
-    participant Logica as CalculadoraLogica
-    participant DTO as DatosEntrada
+    %% Declaración única de actores y participantes
+    actor U as Usuario
+    participant M as Main
+    participant V as CalculadoraVista
+    participant L as CalculadoraLogica
+    participant D as DatosEntrada
 
-    Main->>Vista: mostrarBienvenida()
-    Vista-->>Usuario: Muestra icono y título
+    M->>V: mostrarBienvenida()
+    V-->>U: Muestra icono y título
 
     loop Mientras continuar sea true
-        Main->>Vista: solicitarDatos()
-        Usuario->>Vista: Ingresa n1, op, n2
+        M->>V: solicitarDatos()
+        U->>V: Ingresa n1, op, n2
         
-        %% Uso de create para el objeto DTO
-        create participant DTO
-        Vista->>DTO: new DatosEntrada(n1, n2, op)
-        DTO-->>Vista: objeto datos
-        Vista-->>Main: devuelve objeto datos
+        create participant D
+        V->>D: new DatosEntrada(n1, n2, op)
+        D-->>V: objeto datos
+        V-->>M: devuelve objeto datos
 
         rect rgb(240, 240, 240)
-            Note over Main, Logica: Proceso de Cálculo
-            Main->>Logica: calcular(datos.n1, datos.n2, datos.op)
+            Note over M, L: Proceso de Cálculo
+            M->>L: calcular(n1, n2, op)
             alt Operación exitosa
-                Logica-->>Main: devuelve resultado (double)
-                Main->>Vista: mostrarResultado(res)
-                Vista-->>Usuario: Muestra "Resultado: X"
-            else Error
-                Logica-->>Main: lanza Exception
-                Main->>Vista: mostrarError(msj)
-                Vista-->>Usuario: Muestra "[!] Error: msj"
+                L-->>M: devuelve resultado
+                M->>V: mostrarResultado(res)
+                V-->>U: Imprime resultado
+            else Error (Exception)
+                L-->>M: lanza Error
+                M->>V: mostrarError(msj)
+                V-->>U: Imprime mensaje de error
             end
         end
 
-        Main->>Vista: preguntarContinuar()
-        Usuario->>Vista: Ingresa 's' o 'n'
-        Vista-->>Main: devuelve boolean
+        M->>V: preguntarContinuar()
+        U->>V: Respuesta (s/n)
+        V-->>M: boolean (continuar)
     end
     
-    Main->>Usuario: Imprime "Fin de la sesión"
+    M->>U: "Fin de la sesión"
 ```
