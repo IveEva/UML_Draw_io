@@ -193,30 +193,48 @@ opt resultado calculado correctamente
   Controlador->>Salida: mostrarResultado(resultado)
 end
 ```
-## Diagrama de estados
+## Diagrama de estados mejorado
 ```mermaid
-stateDiagram-v2
-[*] --> Inicio
+sequenceDiagram
+    autonumber
 
-Inicio --> PidiendoNumero1
-PidiendoNumero1 --> PidiendoNumero2 : número1 válido
-PidiendoNumero1 --> ErrorEntrada : número1 inválido
+    %% AQUÍ ESTÁ LA ACCIÓN: Usar 'actor' en lugar de 'participant'
+    actor Usuario
+    participant Main
+    participant Vista as CalculadoraVista
+    participant Logica as CalculadoraLogica
+    participant DTO as DatosEntrada
 
-PidiendoNumero2 --> PidiendoOperacion : número2 válido
-PidiendoNumero2 --> ErrorEntrada : número2 inválido
+    Main->>Vista: mostrarBienvenida()
+    Vista-->>Usuario: Muestra icono ASCII y bienvenida
 
-PidiendoOperacion --> ValidandoOperacion
-ValidandoOperacion --> Calculando : operación válida
-ValidandoOperacion --> ErrorOperacion : operación no válida
+    loop Mientras continuar sea true
+        Main->>Vista: solicitarDatos()
+        Usuario->>Vista: Introduce n1, op, n2
+        
+        create participant DTO
+        Vista->>DTO: new DatosEntrada(n1, n2, op)
+        DTO-->>Vista: objeto datos
+        Vista-->>Main: devuelve datos
 
-Calculando --> MostrandoResultado : cálculo OK
-Calculando --> ErrorDivisionCero : división entre cero
+        rect rgb(240, 240, 240)
+            Main->>Logica: calcular(n1, n2, op)
+            alt Operación exitosa
+                Logica-->>Main: resultado (double)
+                Main->>Vista: mostrarResultado(res)
+                Vista-->>Usuario: Imprime el resultado
+            else Error (Excepción)
+                Logica--x Main: Arithmetic/IllegalArgumentException
+                Main->>Vista: mostrarError(mensaje)
+                Vista-->>Usuario: Imprime "[!] Error..."
+            end
+        end
 
-MostrandoResultado --> Fin
-ErrorEntrada --> Fin
-ErrorOperacion --> Fin
-ErrorDivisionCero --> Fin
-
-Fin --> [*]
+        Main->>Vista: preguntarContinuar()
+        Usuario->>Vista: Teclea 's' o 'n'
+        Vista-->>Main: boolean (continuar)
+    end
+    
+    Main->>Usuario: "Fin de la sesión"
 
 ```
