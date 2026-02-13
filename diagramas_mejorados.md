@@ -157,9 +157,6 @@ sequenceDiagram
     Usuario->>Sistema: Ingresa datos
     Sistema-->>Usuario: Muestra resultado
 
-    Main->>Vista: mostrarBienvenida()
-    Vista-->>Usuario: Muestra icono y título
-
     loop Mientras continuar sea true
         Main->>Vista: solicitarDatos()
         Usuario->>Vista: Ingresa n1, op, n2
