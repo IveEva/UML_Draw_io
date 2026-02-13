@@ -145,8 +145,6 @@ sequenceDiagram
 ## Diagrama de secuencia del programa, con usuario
 ```mermaid
 sequenceDiagram
-    actor Usuario as Cliente
-    participant Sistema
     autonumber
     actor Usuario
     participant Main
@@ -154,12 +152,14 @@ sequenceDiagram
     participant Logica as CalculadoraLogica
     participant DTO as DatosEntrada
 
-    Usuario->>Sistema: Ingresa datos
-    Sistema-->>Usuario: Muestra resultado
+    Main->>Vista: mostrarBienvenida()
+    Vista-->>Usuario: Muestra icono y título
 
     loop Mientras continuar sea true
         Main->>Vista: solicitarDatos()
         Usuario->>Vista: Ingresa n1, op, n2
+        
+        Note over Vista, DTO: Creación de objeto de transferencia
         create participant DTO
         Vista->>DTO: new DatosEntrada(n1, n2, op)
         DTO-->>Vista: objeto datos
@@ -181,7 +181,7 @@ sequenceDiagram
 
         Main->>Vista: preguntarContinuar()
         Usuario->>Vista: Ingresa 's' o 'n'
-        Vista-->>Main: boolean (continuar)
+        Vista-->>Main: devuelve boolean (continuar)
     end
     
     Main->>Usuario: Imprime "Fin de la sesión"
