@@ -159,7 +159,6 @@ sequenceDiagram
         Main->>Vista: solicitarDatos()
         Usuario->>Vista: Ingresa n1, op, n2
         
-        Note over Vista, DTO: Creación de objeto de transferencia
         create participant DTO
         Vista->>DTO: new DatosEntrada(n1, n2, op)
         DTO-->>Vista: objeto datos
@@ -172,7 +171,7 @@ sequenceDiagram
                 Logica-->>Main: devuelve resultado (double)
                 Main->>Vista: mostrarResultado(res)
                 Vista-->>Usuario: Muestra "Resultado: X"
-            else Error (División por cero / Op. inválida)
+            else Error
                 Logica-->>Main: lanza Exception
                 Main->>Vista: mostrarError(msj)
                 Vista-->>Usuario: Muestra "[!] Error: msj"
@@ -181,7 +180,7 @@ sequenceDiagram
 
         Main->>Vista: preguntarContinuar()
         Usuario->>Vista: Ingresa 's' o 'n'
-        Vista-->>Main: devuelve boolean (continuar)
+        Vista-->>Main: devuelve boolean
     end
     
     Main->>Usuario: Imprime "Fin de la sesión"
