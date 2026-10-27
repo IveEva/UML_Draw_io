@@ -1,0 +1,17 @@
+# ADN-3000.4.1 — Componente: Tarjeta de Producto
+
+## 1. Descripción y Propósito
+Estructura de wireframe para mostrar productos destacados en la app. 
+Diseñado para mantener consistencia entre marketing (publicidad) y frontend (desarrollo).
+
+## 2. Anatomía del Wireframe
+- **[Zona Superior]** Imagen del producto (Relación de aspecto 16:9).
+- **[Zona Media]** Título (H3, máx. 2 líneas) + Etiqueta de descuento.
+- **[Zona Inferior]** Precio principal (destacado) + Botón de Acción Primary (CTA).
+
+## 3. Reglas por Departamento
+* **Publicidad / Copywriting:** El título no debe superar los 45 caracteres para evitar saltos de línea indeseados.
+* **Diseño UI:** Respetar un espaciado (padding) interno de 16px.
+* **Desarrollo:** El botón debe lanzar el evento `onClick: addToCart()`.
+
+> **Nota:** No alterar la posición del precio respecto al botón CTA bajo ninguna circunstancia (Regla ADN-3000.2).
